@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "module": "esnext",
+    "moduleResolution": "node",
+    "jsx": "react",
+    "lib": ["es2015", "es2017", "dom"],
+    "target": "es5",
+    "strict": false,
+    "outDir": "./dist/",
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "esModuleInterop": true,
+  },
+  "include": [
+    "*", "./index.d.ts"
+  ]
+}
