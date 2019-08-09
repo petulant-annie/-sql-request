@@ -94,13 +94,6 @@ class Main extends React.Component<IProps<IInitialState>> {
     checkCode(this.state.user);
   }
 
-  // componentDidMount() {
-  //   const isToken = localStorage.getItem('access token');
-  //   if (isToken == null) {
-  //     this.setState({ isLocalStorageEmpty: true });
-  //   } else this.setState({ isLocalStorageEmpty: false });
-  // }
-
   signInPopup = (props: RouteComponentProps) => {
     return (
       <SignInPopup
@@ -113,19 +106,32 @@ class Main extends React.Component<IProps<IInitialState>> {
     );
   }
 
-  render() {
+  componentDidMount() {
+    const isToken = localStorage.getItem('access token');
+    if (isToken == null) {
+      this.setState({ isLocalStorageEmpty: true });
+    } else this.setState({ isLocalStorageEmpty: false });
+  }
 
+  redirect() {
+    if (this.state.isLocalStorageEmpty) {
+      return <Redirect to="\:login" />;
+    }
+  }
+
+  render() {
+    console.log(this.state.isLocalStorageEmpty);
+    this.redirect();
     return (
       <div className="main-content">
-        <Route path="/" component={Header} />
-        <Switch>
+        <Router>
+          <Route path="/" component={Header} />
           <Route
-            path="/"
-            exact={true}
+            path="/:login"
             render={this.signInPopup}
           />
           <Route path="/" component={ContentBar} />
-        </Switch>
+        </Router>
       </div>
     );
   }
