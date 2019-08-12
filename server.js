@@ -14,12 +14,8 @@ app.post('/login', (req, res) => {
   userCheckFromDB(req, res);
 });
 
-app.post('/code', (req, res) => {
-  codeCheckFromDB(req, res);
-});
-
-app.post('/token', verifyToken, (req, res) => {
-  jwt.verify(req.token, config.secret, (err, authData) => {
+app.post('/code', verifyToken, async (req, res) => {
+  await jwt.verify(req.token, config.secret, (err, authData) => {
     if (err) {
       console.log(err);
     } else {
@@ -31,12 +27,29 @@ app.post('/token', verifyToken, (req, res) => {
     }
     console.log('hello token request');
   });
+  await codeCheckFromDB(req, res);
+
 });
+
+// app.post('/token', verifyToken, (req, res) => {
+//   jwt.verify(req.token, config.secret, (err, authData) => {
+//     if (err) {
+//       console.log(err);
+//     } else {
+//       res.json({
+//         message: 'Post created...',
+//         authData
+//       });
+//       console.log(authData);
+//     }
+//     console.log('hello token request');
+//   });
+// });
 
 app.post('/refreshtoken', verifyToken, (req, res) => {
   let datenow = Date.now() / 1000;
   let date = Math.ceil(datenow);
-  
+
   jwt.verify(req.token, config.refreshTokenSecret, async (err, authData) => {
     if (err) {
       console.log(err);
@@ -103,8 +116,7 @@ async function userCheckFromDB(req, res) {
     } else if (results.length > 0) {
       console.log('hello user');
       const token = await getAccessToken(req.body.phone);
-      const refreshToken = await getRefreshToken(req.body.phone);
-      res.json({ token, refreshToken });
+      res.json({ token });
     } else {
       console.log('No such user');
     };
@@ -122,13 +134,14 @@ async function codeCheckFromDB(req, res) {
     Promise: bluebird
   });
 
-  const codeCheck = await connection.execute(selectCodeRequest, (err, results) => {
+  const codeCheck = await connection.execute(selectCodeRequest, async (err, results) => {
     if (err) {
       console.log(err);
     } else if (results.length > 0) {
       console.log('hello code');
+      const refreshToken = await getRefreshToken(req.body.phone);
     } else {
-      console.log('No such code')
+      console.log('No such code');
     };
   });
 }

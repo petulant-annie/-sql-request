@@ -101,7 +101,7 @@ class Main extends React.Component<IProps<IInitialState>> {
         onInputCheckValidation={this.onInputCheckValidation}
         passwordCheck={this.passwordCheck}
         handleSignInSubmit={this.handleSignInSubmit}
-        handleCodeValidSubmit={getTokenRefresh}
+        handleCodeValidSubmit={this.handleCodeValidSubmit}
       />
     );
   }
@@ -132,7 +132,7 @@ class Main extends React.Component<IProps<IInitialState>> {
   }
 
   componentDidMount() {
-    const isToken = localStorage.getItem('access token');
+    const isToken = localStorage.getItem('refresh token');
     if (isToken === null || isToken === undefined) {
       this.setState({ isLocalStorageEmpty: true });
     } else this.setState({ isLocalStorageEmpty: false });

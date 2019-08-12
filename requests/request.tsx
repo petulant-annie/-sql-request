@@ -8,17 +8,23 @@ export async function checkUser(user: {}) {
     .then(res => res.json())
     .then((res) => {
       localStorage.setItem('access token', `${res.token}`);
-      localStorage.setItem('refresh token', `${res.refreshToken}`);
     });
+}
 
-  await fetch('http://localhost:5000/token', {
+export async function checkCode(user: {}) {
+  await fetch('http://localhost:5000/code', {
     method: 'POST',
     mode: 'cors',
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${localStorage.getItem('access token')}`,
     },
-  });
+    body: JSON.stringify(user),
+  })
+    .then(res => res.json())
+    .then((res) => {
+      localStorage.setItem('refresh token', `${res.refreshToken}`);
+    });
 
 }
 
@@ -35,15 +41,5 @@ export function getTokenRefresh() {
     .then((res) => {
       localStorage.setItem('access token', `${res.token}`);
       localStorage.setItem('refresh token', `${res.refreshToken}`);
-    });
-}
-
-export async function checkCode(user: {}) {
-  const res =
-    await fetch('http://localhost:5000/code', {
-      method: 'POST',
-      mode: 'cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(user),
     });
 }
