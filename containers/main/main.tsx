@@ -122,8 +122,8 @@ class Main extends React.Component<IProps<IInitialState>> {
   render() {
     return (
       <div className="main-content">
-        {this.redirect()}
         <Router>
+          {this.redirect()}
           <Route path="/" component={Header} />
           <Route
             exact={true}
