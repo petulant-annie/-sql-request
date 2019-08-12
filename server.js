@@ -14,37 +14,20 @@ app.post('/login', (req, res) => {
   userCheckFromDB(req, res);
 });
 
-app.post('/code', verifyToken, async (req, res) => {
-  await jwt.verify(req.token, config.secret, (err, authData) => {
+app.post('/code', verifyToken, (req, res) => {
+  jwt.verify(req.token, config.secret, async (err, authData) => {
     if (err) {
       console.log(err);
     } else {
-      res.json({
-        message: 'Post created...',
-        authData
-      });
+      const refreshToken = await codeCheckFromDB(req, res);
+      res.json({ refreshToken });
       console.log(authData);
     }
     console.log('hello token request');
   });
-  await codeCheckFromDB(req, res);
 
+  console.log(res.refreshToken);
 });
-
-// app.post('/token', verifyToken, (req, res) => {
-//   jwt.verify(req.token, config.secret, (err, authData) => {
-//     if (err) {
-//       console.log(err);
-//     } else {
-//       res.json({
-//         message: 'Post created...',
-//         authData
-//       });
-//       console.log(authData);
-//     }
-//     console.log('hello token request');
-//   });
-// });
 
 app.post('/refreshtoken', verifyToken, (req, res) => {
   let datenow = Date.now() / 1000;
@@ -72,7 +55,7 @@ function verifyToken(req, res, next) {
     req.token = bearerToken;
     next();
   } else {
-    console.log(err);
+    console.log('ERR');
   }
 }
 
@@ -140,6 +123,7 @@ async function codeCheckFromDB(req, res) {
     } else if (results.length > 0) {
       console.log('hello code');
       const refreshToken = await getRefreshToken(req.body.phone);
+      res.json({ refreshToken });
     } else {
       console.log('No such code');
     };

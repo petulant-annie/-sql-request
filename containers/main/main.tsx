@@ -25,7 +25,8 @@ export interface IState {
     password: string;
     checkingCode: string;
   };
-  isLocalStorageEmpty: boolean;
+  isRefreshTokenEmpty: boolean;
+  isAccessTokenEmpty: boolean;
 }
 
 interface IProps<IInitialState> {
@@ -44,7 +45,8 @@ class Main extends React.Component<IProps<IInitialState>> {
         password: '',
         checkingCode: '',
       },
-      isLocalStorageEmpty: true,
+      isRefreshTokenEmpty: true,
+      isAccessTokenEmpty: true,
     };
   }
 
@@ -79,13 +81,23 @@ class Main extends React.Component<IProps<IInitialState>> {
   }
 
   passwordCheck = (e: React.ChangeEvent) => {
-    this.dataChange(e);
+    const target = e.target as HTMLInputElement;
+    const passwordRegExp = /^(?=.*[a-z])[a-z\d]{6,}$/gi;
+
+    if (target.value.match(passwordRegExp)) {
+      target.setCustomValidity('');
+      this.dataChange(e);
+    } else target.setCustomValidity('Invalid data.');
   }
 
   handleSignInSubmit = (e: React.MouseEvent) => {
     e.preventDefault;
     this.props.signInAction(this.state.user.phone, this.state.user.password);
     checkUser(this.state.user);
+    const isToken = localStorage.getItem('access token');
+    if (isToken !== null || isToken !== 'undefined') {
+      this.setState({ isAccessTokenEmpty: false });
+    } else this.setState({ isAccessTokenEmpty: true });
   }
 
   handleCodeValidSubmit = (e: React.MouseEvent) => {
@@ -117,7 +129,7 @@ class Main extends React.Component<IProps<IInitialState>> {
 
   handleClearLocalStorage = () => {
     localStorage.clear();
-    this.setState({ isLocalStorageEmpty: true });
+    this.setState({ isRefreshTokenEmpty: true });
   }
 
   handleTokenRefresh() {
@@ -133,13 +145,13 @@ class Main extends React.Component<IProps<IInitialState>> {
 
   componentDidMount() {
     const isToken = localStorage.getItem('refresh token');
-    if (isToken === null || isToken === undefined) {
-      this.setState({ isLocalStorageEmpty: true });
-    } else this.setState({ isLocalStorageEmpty: false });
+    if (isToken === null || isToken === 'undefined') {
+      this.setState({ isRefreshTokenEmpty: true });
+    } else this.setState({ isRefreshTokenEmpty: false });
   }
 
   redirectToLogin() {
-    if (this.state.isLocalStorageEmpty) {
+    if (this.state.isRefreshTokenEmpty) {
       return <Redirect push={true} to="/login" />;
     }
 
