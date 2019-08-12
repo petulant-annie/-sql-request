@@ -15,10 +15,9 @@ export default class SignInPopup extends React.Component<ISignInProps> {
   }
 
   render() {
-
     return (
       <div className="signIn-main">
-        <div className="signIn-check">
+        <form action="/login" className="signIn-check">
           <div className="signIn-header">Sign in: </div>
           <input
             type="text"
@@ -41,7 +40,7 @@ export default class SignInPopup extends React.Component<ISignInProps> {
           >
             Submit
           </button>
-        </div>
+        </form>
         <div className="signIn-code-check">
         <div className="signIn-header">Enter code: </div>
           <input

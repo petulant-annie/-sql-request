@@ -113,17 +113,19 @@ class Main extends React.Component<IProps<IInitialState>> {
     } else this.setState({ isLocalStorageEmpty: false });
   }
 
-  redirect() {
+  redirectToLogin() {
     if (this.state.isLocalStorageEmpty) {
       return <Redirect push={true} to="/login" />;
     }
+
+    return <Redirect push={true} to="/cabinet" />;
   }
 
   render() {
     return (
       <div className="main-content">
         <Router>
-          {this.redirect()}
+          {this.redirectToLogin()}
           <Route path="/" component={Header} />
           <Route
             exact={true}
