@@ -34,20 +34,19 @@ app.post('/token', verifyToken, (req, res) => {
 });
 
 app.post('/refreshtoken', verifyToken, (req, res) => {
-  let date = parseInt(Date.UTC(), 10);
-  jwt.verify(req.token, config.refreshTokenSecret, (err, authData) => {
+  let datenow = Date.now() / 1000;
+  let date = Math.ceil(datenow);
+  
+  jwt.verify(req.token, config.refreshTokenSecret, async (err, authData) => {
     if (err) {
       console.log(err);
-    } else if (authData.exp != date) {
-      console.log(authData.exp);
-      console.log(date);
-    console.log('hello token veryfied');
-    } else {
-      res.json({
-        message: 'Post created...',
-        authData
-      });
-      console.log(authData);
+    } else if (authData.exp !== date) {
+      const token = await getAccessToken(authData.user);
+      const refreshToken = await getRefreshToken(authData.user);
+      console.log(token);
+      console.log(refreshToken);
+      console.log('token was refreshed');
+      res.json({ token, refreshToken });
     }
   });
 });

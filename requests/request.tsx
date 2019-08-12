@@ -21,6 +21,7 @@ export async function checkUser(user: {}) {
   });
 
 }
+
 export function getTokenRefresh() {
   fetch('http://localhost:5000/refreshtoken', {
     method: 'POST',
@@ -29,7 +30,12 @@ export function getTokenRefresh() {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${localStorage.getItem('refresh token')}`,
     },
-  });
+  })
+    .then(res => res.json())
+    .then((res) => {
+      localStorage.setItem('access token', `${res.token}`);
+      localStorage.setItem('refresh token', `${res.refreshToken}`);
+    });
 }
 
 export async function checkCode(user: {}) {

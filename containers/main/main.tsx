@@ -120,6 +120,17 @@ class Main extends React.Component<IProps<IInitialState>> {
     this.setState({ isLocalStorageEmpty: true });
   }
 
+  handleTokenRefresh() {
+    const isRefreshToken = localStorage.getItem('refresh token');
+    if (isRefreshToken) {
+      console.log('refresh');
+      let timerId = setTimeout(function refresh() {
+        getTokenRefresh();
+        timerId = setTimeout(refresh, 540000);
+      }, 540000);
+    }
+  }
+
   componentDidMount() {
     const isToken = localStorage.getItem('access token');
     if (isToken === null || isToken === undefined) {
@@ -136,6 +147,8 @@ class Main extends React.Component<IProps<IInitialState>> {
   }
 
   render() {
+    this.handleTokenRefresh();
+
     return (
       <div className="main-content">
         <Router>

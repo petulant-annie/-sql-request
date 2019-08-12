@@ -27,7 +27,7 @@ export default class SignInPopup extends React.Component<ISignInProps> {
             onChange={this.props.onInputCheckValidation}
           />
           <input
-            type="text"
+            type="password"
             name="password"
             className="signIn-pass"
             placeholder="password"
