@@ -106,6 +106,20 @@ class Main extends React.Component<IProps<IInitialState>> {
     );
   }
 
+  header = (props: RouteComponentProps) => {
+    return (
+      <Header
+        {...props}
+        handleClearLocalStorage={this.handleClearLocalStorage}
+      />
+    );
+  }
+
+  handleClearLocalStorage = () => {
+    localStorage.clear();
+    this.setState({ isLocalStorageEmpty: true });
+  }
+
   componentDidMount() {
     const isToken = localStorage.getItem('access token');
     if (isToken === null || isToken === undefined) {
@@ -126,7 +140,7 @@ class Main extends React.Component<IProps<IInitialState>> {
       <div className="main-content">
         <Router>
           {this.redirectToLogin()}
-          <Route path="/" component={Header} />
+          <Route path="/" render={this.header} />
           <Route
             exact={true}
             path="/login"

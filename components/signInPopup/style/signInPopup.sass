@@ -1,9 +1,40 @@
 $main-color: #009846
 
 .signIn-main
-  border: 1px solid grey
-  display: flex
-  flex-direction: column
-  margin: 0 auto
+  border: 1px solid $main-color
+  margin: 100px auto
   padding: 10px
   width: 300px
+
+.signIn-check,
+.signIn-code-check
+  display: flex
+  flex-direction: column
+
+.signIn-tel,
+.signIn-code,
+.signIn-pass
+  border: 1px solid $main-color
+  border-radius: 5px
+  text-align: center
+  margin-top: 10px
+  outline: none
+  padding: 3px
+
+.check-btn
+  background-color: $main-color
+  border: none;
+  border: 1px solid $main-color
+  border-radius: 5px
+  color: white
+  margin-top: 10px
+  padding: 5px
+
+.check-btn:hover
+  background-color: white
+  border: 1px solid $main-color
+  color: $main-color
+  cursor: pointer
+
+.signIn-header
+  margin-top: 10px

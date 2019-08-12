@@ -35,13 +35,13 @@ export default class SignInPopup extends React.Component<ISignInProps> {
           />
           <button
             type="submit"
-            className="signIn-check-btn"
+            className="signIn-check-btn check-btn"
             onClick={this.props.handleSignInSubmit}
           >
             Submit
           </button>
         </form>
-        <div className="signIn-code-check">
+        <form className="signIn-code-check">
         <div className="signIn-header">Enter code: </div>
           <input
             type="text"
@@ -52,12 +52,12 @@ export default class SignInPopup extends React.Component<ISignInProps> {
           />
           <button
             type="submit"
-            className="code-check-btn"
+            className="code-check-btn check-btn"
             onClick={this.props.handleCodeValidSubmit}
           >
             Submit
           </button>
-        </div>
+        </form>
       </div>
     );
   }
