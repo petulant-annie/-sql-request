@@ -108,29 +108,29 @@ class Main extends React.Component<IProps<IInitialState>> {
 
   componentDidMount() {
     const isToken = localStorage.getItem('access token');
-    if (isToken == null) {
+    if (isToken === null || isToken === undefined) {
       this.setState({ isLocalStorageEmpty: true });
     } else this.setState({ isLocalStorageEmpty: false });
   }
 
   redirect() {
     if (this.state.isLocalStorageEmpty) {
-      return <Redirect to="\:login" />;
+      return <Redirect push={true} to="/login" />;
     }
   }
 
   render() {
-    console.log(this.state.isLocalStorageEmpty);
-    this.redirect();
     return (
       <div className="main-content">
+        {this.redirect()}
         <Router>
           <Route path="/" component={Header} />
           <Route
-            path="/:login"
+            exact={true}
+            path="/login"
             render={this.signInPopup}
           />
-          <Route path="/" component={ContentBar} />
+          <Route path="/cabinet" component={ContentBar} />
         </Router>
       </div>
     );
