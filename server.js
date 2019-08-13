@@ -27,19 +27,19 @@ app.post('/code', verifyToken, (req, res) => {
 });
 
 app.post('/refreshtoken', verifyToken, (req, res) => {
-  let date = Math.floor(Date.now()/1000) + (60 * 60);
-  console.log(date + ' now')
+  let date = Math.floor((Date.now() / 1000) + (60 * 60));
+  console.log(date + ' now');
 
-  jwt.verify(req.token, config.refreshTokenSecret, async (err, authData) => {
-    console.log(authData.exp +' exp')
+  jwt.verify(req.token, config.refreshTokenSecret, async(err, authData) => {
+
     if (err) {
       console.log(err);
-    } else if (authData.exp > date) {
+    } else if (authData.exp <= date) {
+      console.log(authData.exp + ' exp');
       const token = await getAccessToken(authData.user);
       const refreshToken = await getRefreshToken(authData.user);
-      console.log('token was refreshed');
       res.json({ token, refreshToken });
-    }
+    } else console.log('wtf');
   });
 });
 
@@ -52,6 +52,7 @@ function verifyToken(req, res, next) {
     next();
   } else {
     console.log('ERR');
+    return res.json({ err: true });
   }
 }
 

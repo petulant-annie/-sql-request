@@ -126,16 +126,12 @@ class Main extends React.Component<IProps<IInitialState>> {
     this.setState({ isRefreshTokenEmpty: true });
   }
 
-  handleTokenRefresh() {
-    const isRefreshToken = localStorage.getItem('refresh token');
-    if (isRefreshToken === null || isRefreshToken === 'undefined') {
+  async handleTokenRefresh() {
+    let refresh;
+    if (!this.state.isRefreshTokenEmpty) {
       console.log('refresh');
-      let timerId = setTimeout(function refresh() {
-        console.log('refresh');
-        getTokenRefresh();
-        timerId = setTimeout(refresh, 5000);
-      }, 5000);
-    }
+      refresh = await setInterval(getTokenRefresh, 540000);
+    } else await clearInterval(refresh);
   }
 
   componentDidMount() {
@@ -160,7 +156,7 @@ class Main extends React.Component<IProps<IInitialState>> {
       <div className="main-content">
         <Router>
           {this.redirectToLogin()}
-          <Route path="/" render={this.header} />
+          <Route path="/cabinet" render={this.header} />
           <Route
             exact={true}
             path="/login"
