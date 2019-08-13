@@ -26,7 +26,6 @@ export interface IState {
     checkingCode: string;
   };
   isRefreshTokenEmpty: boolean;
-  isAccessTokenEmpty: boolean;
 }
 
 interface IProps<IInitialState> {
@@ -46,7 +45,6 @@ class Main extends React.Component<IProps<IInitialState>> {
         checkingCode: '',
       },
       isRefreshTokenEmpty: true,
-      isAccessTokenEmpty: true,
     };
   }
 
@@ -94,10 +92,6 @@ class Main extends React.Component<IProps<IInitialState>> {
     e.preventDefault;
     this.props.signInAction(this.state.user.phone, this.state.user.password);
     checkUser(this.state.user);
-    const isToken = localStorage.getItem('access token');
-    if (isToken !== null || isToken !== 'undefined') {
-      this.setState({ isAccessTokenEmpty: false });
-    } else this.setState({ isAccessTokenEmpty: true });
   }
 
   handleCodeValidSubmit = (e: React.MouseEvent) => {
@@ -144,8 +138,8 @@ class Main extends React.Component<IProps<IInitialState>> {
   }
 
   componentDidMount() {
-    const isToken = localStorage.getItem('refresh token');
-    if (isToken === null || isToken === 'undefined') {
+    const isRefreshToken = localStorage.getItem('refresh token');
+    if (isRefreshToken === null || isRefreshToken === 'undefined') {
       this.setState({ isRefreshTokenEmpty: true });
     } else this.setState({ isRefreshTokenEmpty: false });
   }

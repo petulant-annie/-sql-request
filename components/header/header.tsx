@@ -24,15 +24,15 @@ export default class Header extends React.Component<IHeaderProps> {
               id="search"
               spellCheck={true}
             />
-            <button className="search-btn check-btn" id="searchBtn">Search</button>
+            <button className="search-btn check-btn" id="searchBtn">Пошук</button>
           </div>
           <select name="user-select" id="userSelect" className="header-select check-btn">
-            <option value="1">Contract 1</option>
-            <option value="2">Contract 2</option>
-            <option value="3">Contract 3</option>
+            <option value="1">Договір 1</option>
+            <option value="2">Договір 2</option>
+            <option value="3">Договір 3</option>
           </select>
           <div className="user-cart">
-            <button className="check-btn">Cart
+            <button className="check-btn">Кошик
             </button>
           </div>
           <div className="sign-out">
@@ -41,7 +41,7 @@ export default class Header extends React.Component<IHeaderProps> {
               type="submit"
               onClick={this.props.handleClearLocalStorage}
             >
-              Sign out
+              Вихід
             </button>
           </div>
 

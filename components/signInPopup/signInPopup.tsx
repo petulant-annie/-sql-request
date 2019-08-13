@@ -1,4 +1,5 @@
 import * as React from 'react';
+import classNames from 'classnames/bind';
 
 import './style/signInPopup.sass';
 
@@ -10,54 +11,71 @@ interface ISignInProps {
 }
 
 export default class SignInPopup extends React.Component<ISignInProps> {
+  formClassName: string;
+  formCodeClassName: string;
   constructor(props: ISignInProps) {
     super(props);
   }
 
   render() {
+    let isAccessTokenEmpty;
+    const isToken = localStorage.getItem('access token');
+    if (isToken === null || isToken === 'undefined') {
+      isAccessTokenEmpty = true;
+    } else isAccessTokenEmpty = false;
+    console.log(isAccessTokenEmpty);
+
+    const form = (
+      <form className={isAccessTokenEmpty ? 'signIn-check' : 'hideLogin'}>
+        <div className="signIn-header">Вхід до особистого кабінету</div>
+        <input
+          type="text"
+          name="phone"
+          className="signIn-tel"
+          placeholder="телефон"
+          onChange={this.props.onInputCheckValidation}
+        />
+        <input
+          type="password"
+          name="password"
+          className="signIn-pass"
+          placeholder="пароль"
+          onChange={this.props.passwordCheck}
+        />
+        <button
+          type="submit"
+          className="signIn-check-btn check-btn"
+          onClick={this.props.handleSignInSubmit}
+        >
+          Увійти
+        </button>
+      </form>
+    );
+
+    const code = (
+      <form className={!isAccessTokenEmpty ? 'signIn-check' : 'hideLogin'}>
+        <div className="signIn-header">Код перевірки: </div>
+        <input
+          type="text"
+          name="checkingCode"
+          className="signIn-code"
+          placeholder="ХХХХ"
+          onChange={this.props.onInputCheckValidation}
+        />
+        <button
+          type="submit"
+          className="code-check-btn check-btn"
+          onClick={this.props.handleCodeValidSubmit}
+        >
+          Підтвердити
+        </button>
+      </form>
+    );
+
     return (
       <div className="signIn-main">
-        <form action="/login" className="signIn-check">
-          <div className="signIn-header">Sign in: </div>
-          <input
-            type="text"
-            name="phone"
-            className="signIn-tel"
-            placeholder="phone"
-            onChange={this.props.onInputCheckValidation}
-          />
-          <input
-            type="password"
-            name="password"
-            className="signIn-pass"
-            placeholder="password"
-            onChange={this.props.passwordCheck}
-          />
-          <button
-            type="submit"
-            className="signIn-check-btn check-btn"
-            onClick={this.props.handleSignInSubmit}
-          >
-            Submit
-          </button>
-        </form>
-        <form className="signIn-code-check">
-        <div className="signIn-header">Enter code: </div>
-          <input
-            type="text"
-            name="checkingCode"
-            className="signIn-code"
-            placeholder="checking code"
-            onChange={this.props.onInputCheckValidation}
-          />
-          <button
-            type="submit"
-            className="code-check-btn check-btn"
-            onClick={this.props.handleCodeValidSubmit}
-          >
-            Submit
-          </button>
-        </form>
+        {form}
+        {code}
       </div>
     );
   }
