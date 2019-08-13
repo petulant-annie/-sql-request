@@ -1,5 +1,5 @@
-export async function checkUser(user: {}) {
-  await fetch('http://localhost:5000/login', {
+export function checkUser(user: {}) {
+  fetch('http://localhost:5000/login', {
     method: 'POST',
     mode: 'cors',
     headers: { 'Content-Type': 'application/json' },
@@ -11,8 +11,8 @@ export async function checkUser(user: {}) {
     });
 }
 
-export async function checkCode(user: {}) {
-  await fetch('http://localhost:5000/code', {
+export function checkCode(user: {}) {
+  fetch('http://localhost:5000/code', {
     method: 'POST',
     mode: 'cors',
     headers: {
@@ -43,3 +43,7 @@ export function getTokenRefresh() {
       localStorage.setItem('refresh token', `${res.refreshToken}`);
     });
 }
+
+// export function getContracts() {
+
+// }

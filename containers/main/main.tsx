@@ -128,12 +128,13 @@ class Main extends React.Component<IProps<IInitialState>> {
 
   handleTokenRefresh() {
     const isRefreshToken = localStorage.getItem('refresh token');
-    if (isRefreshToken) {
+    if (isRefreshToken === null || isRefreshToken === 'undefined') {
       console.log('refresh');
       let timerId = setTimeout(function refresh() {
+        console.log('refresh');
         getTokenRefresh();
-        timerId = setTimeout(refresh, 540000);
-      }, 540000);
+        timerId = setTimeout(refresh, 5000);
+      }, 5000);
     }
   }
 
