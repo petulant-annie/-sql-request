@@ -19,3 +19,7 @@ export const codeCheckAction = (checkingCode: string) => ({
   checkingCode,
   type: 'CHECK_CODE',
 });
+
+export const startRequests = () => ({
+  type: 'SEND_REQUEST',
+});

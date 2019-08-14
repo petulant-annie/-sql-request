@@ -23,7 +23,6 @@ export default class SignInPopup extends React.Component<ISignInProps> {
     if (isToken === null || isToken === 'undefined') {
       isAccessTokenEmpty = true;
     } else isAccessTokenEmpty = false;
-    console.log(isAccessTokenEmpty);
 
     const form = (
       <form className={isAccessTokenEmpty ? 'signIn-check' : 'hideLogin'}>

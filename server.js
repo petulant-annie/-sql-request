@@ -4,9 +4,12 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const helmet = require('helmet');
+
 const config = require('./config');
 
 const app = express();
+app.use(helmet());
 app.use(bodyParser.json());
 app.use(cors());
 
@@ -17,7 +20,7 @@ app.post('/login', (req, res) => {
 app.post('/code', verifyToken, (req, res) => {
   jwt.verify(req.token, config.secret, async (err, authData) => {
     if (err) {
-      console.log(err);
+      res.status(401).json(err);
     } else {
       const refreshToken = await codeCheckFromDB(req, res);
       console.log(authData);
@@ -30,16 +33,16 @@ app.post('/refreshtoken', verifyToken, (req, res) => {
   let date = Math.floor((Date.now() / 1000) + (60 * 60));
   console.log(date + ' now');
 
-  jwt.verify(req.token, config.refreshTokenSecret, async(err, authData) => {
-
+  jwt.verify(req.token, config.refreshTokenSecret, async (err, authData) => {
+    console.log(err);
     if (err) {
-      console.log(err);
+      res.status(401).json(err);
     } else if (authData.exp <= date) {
       console.log(authData.exp + ' exp');
       const token = await getAccessToken(authData.user);
       const refreshToken = await getRefreshToken(authData.user);
       res.json({ token, refreshToken });
-    } else console.log('wtf');
+    }
   });
 });
 
@@ -51,8 +54,7 @@ function verifyToken(req, res, next) {
     req.token = bearerToken;
     next();
   } else {
-    console.log('ERR');
-    return res.json({ err: true });
+    return res.status(401).json(err);
   }
 }
 
@@ -91,8 +93,9 @@ async function userCheckFromDB(req, res) {
   });
 
   const userCheck = await connection.execute(selectUserRequest, async (err, results) => {
+    console.log(req.body)
     if (err) {
-      console.log(err);
+      res.status(401).json(err);
     } else if (results.length > 0) {
       console.log('hello user');
       const token = await getAccessToken(req.body.phone);
@@ -101,6 +104,7 @@ async function userCheckFromDB(req, res) {
       console.log('No such user');
     };
   });
+
 }
 
 async function codeCheckFromDB(req, res) {
@@ -116,7 +120,7 @@ async function codeCheckFromDB(req, res) {
 
   const codeCheck = await connection.execute(selectCodeRequest, async (err, results) => {
     if (err) {
-      console.log(err);
+      res.status(401).json(err);
     } else if (results.length > 0) {
       console.log('code valid');
       const refreshToken = await getRefreshToken(req.body.phone);

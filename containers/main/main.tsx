@@ -12,7 +12,7 @@ import {
 
 import SignInPopup from '../../components/signInPopup/signInPopup';
 import { checkUser, checkCode, getTokenRefresh } from '../../requests/request';
-import { signInAction, codeCheckAction } from '../../actions/accountActions';
+import { signInAction, codeCheckAction, startRequests } from '../../actions/accountActions';
 import Header from '../../components/header/header';
 import ContentBar from '../contentBar/contentBar';
 import { IInitialState } from '../../reducers/accountReducers';
@@ -32,10 +32,12 @@ interface IProps<IInitialState> {
   accountState: IInitialState;
   signInAction: (phone: string, password: string) => void;
   codeCheckAction: (checkingCode: string) => void;
+  startRequests: () => void;
 }
 
 class Main extends React.Component<IProps<IInitialState>> {
   state: IState;
+  refresh: NodeJS.Timer;
   constructor(props: IProps<IInitialState>) {
     super(props);
     this.state = {
@@ -92,6 +94,7 @@ class Main extends React.Component<IProps<IInitialState>> {
     e.preventDefault;
     this.props.signInAction(this.state.user.phone, this.state.user.password);
     checkUser(this.state.user);
+    // this.props.startRequests;
   }
 
   handleCodeValidSubmit = (e: React.MouseEvent) => {
@@ -126,19 +129,11 @@ class Main extends React.Component<IProps<IInitialState>> {
     this.setState({ isRefreshTokenEmpty: true });
   }
 
-  async handleTokenRefresh() {
-    let refresh;
+  handleTokenRefresh() {
     if (!this.state.isRefreshTokenEmpty) {
       console.log('refresh');
-      refresh = await setInterval(getTokenRefresh, 540000);
-    } else await clearInterval(refresh);
-  }
-
-  componentDidMount() {
-    const isRefreshToken = localStorage.getItem('refresh token');
-    if (isRefreshToken === null || isRefreshToken === 'undefined') {
-      this.setState({ isRefreshTokenEmpty: true });
-    } else this.setState({ isRefreshTokenEmpty: false });
+      this.refresh = setInterval(getTokenRefresh, 61000);
+    } else clearInterval(this.refresh);
   }
 
   redirectToLogin() {
@@ -149,8 +144,19 @@ class Main extends React.Component<IProps<IInitialState>> {
     return <Redirect push={true} to="/cabinet" />;
   }
 
-  render() {
+  componentDidMount() {
+    const isRefreshToken = localStorage.getItem('refresh token');
+    if (isRefreshToken === null || isRefreshToken === 'undefined') {
+      this.setState({ isRefreshTokenEmpty: true });
+    } else this.setState({ isRefreshTokenEmpty: false });
+  }
+
+  componentDidUpdate() {
     this.handleTokenRefresh();
+  }
+
+  render() {
+    console.log(this.state.isRefreshTokenEmpty);
 
     return (
       <div className="main-content">
@@ -175,6 +181,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators(
   {
     signInAction,
     codeCheckAction,
+    startRequests,
   },
   dispatch);
 

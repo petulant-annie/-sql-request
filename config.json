@@ -3,5 +3,5 @@
   "refreshTokenSecret": "some-secret-refresh-token-key",
   "port": 5000,
   "tokenLife": 120,
-  "refreshTokenLife": 600
+  "refreshTokenLife": 60
 }
